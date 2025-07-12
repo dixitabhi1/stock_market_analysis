@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            width: 97%;
+            margin: auto;
+            padding: 20px;
+        }
+        .section {
+            background: white;
+            padding: 20px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            margin: 10px;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #0056b3;
+            transform: scale(1.05);
+        }
+        #companyList button {
+            display: block;
+            width: 80%;
+            margin: 5px auto;
+            background: rgb(82, 94, 223);
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #companyList button:hover {
+            background: darkblue;
+            transform: scale(1.05);
+        }
+        #searchBox {
+            width: 80%;
+            padding: 10px;
+            margin: 10px auto;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            display: block;
+        }
+        #fullscreenImage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            display: none;
+        }
+        #fullscreenImage img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+        #fullscreenImage span {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+        }
+        /* Background image */
+
+        body {
+            background: url('static/images/background.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        .container {
+            backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.2); /* Light overlay */
+            border-radius: 10px;
+            padding: 20px;
+        }
+          /* Background Blur*/
+                  
+       
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Your Dashboard</h1>
+        <button onclick="showSection('dashboard')">Select companies</button>
+        <button onclick="showSection('history')">History of Dashboard</button>
+        <button onclick="showSection('About')">About Us</button>
+        <button onclick="showSection('Feedback')">Feedback</button>
+        <div id="dashboard" class="section hidden">
+            <h2>Company's Name</h2>
+            <input type="text" id="searchBox" onkeyup="filterCompanies()" placeholder="Search Company...">
+            <div id="companyList"></div> 
+        </div>
+        <div id="history" class="section hidden">
+            <h2>History of Dashboard</h2>
+            <ul id="historyList"></ul>
+        </div>
+        <div id="About" class="section hidden">
+            <h2>About Us</h2>
+            <p>Yahaan additional features ya upcoming updates aa sakte hain.</p>
+        </div>
+
+        <div id="Feedback" class="section hidden">
+            <h2>Feedback</h2>
+            <form id="feedbackForm">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br><br>
+        
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br><br>
+        
+                <label for="message">Your Feedback:</label><br>
+                <textarea id="message" name="message" rows="10" columns="10" required></textarea><br><br>
+        
+                <button type="submit">Submit</button>
+            </form>
+            <p id="feedbackResponse" style="color: green; display: none;">Thank you for your feedback!</p>
+        </div>
+    </div>
+
+    <div id="fullscreenImage">
+        <span onclick="closeImage()">&times;</span>
+        <img id="fullImage" src="" alt="Company Image">
+    </div>
+    <script>
+        let companies = {
+            "Reliance Industries": "static/images/Relience.png",
+            "TCS": "static/images/TCS.jpeg",
+            "Adani Enterprises": "static/images/Adani.jpeg",
+            "Bajaj Finance": "static/images/Bajaj.png",
+            "Infosys": "static/images/Infosys.png",
+            "HCL Technologies": "static/images/HCL.png",
+            "Wipro": "static/images/Wipro.png",
+            "Tech Mahindra": "static/images/TechMahindra.png",
+            "Larsen & Toubro": "static/images/LarsenToubro.png",
+            "Bharti Airtel": "static/images/Airtel.png",
+        };
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            if (sectionId === 'dashboard') {
+                showCompanies();
+            }
+        }
+        function showCompanies() {
+            let companyDiv = document.getElementById("companyList");
+            companyDiv.innerHTML = "";
+            for (let company in companies) {
+                let btn = document.createElement("button");
+                btn.innerText = company;
+                btn.classList.add("company-btn");
+                btn.setAttribute("data-name", company.toLowerCase());
+                btn.onclick = function () {
+                    openImage(company, companies[company]);
+                };
+                companyDiv.appendChild(btn);
+            }
+        }
+        function openImage(companyName, imageUrl) {
+            if (imageUrl) {
+                document.getElementById("fullImage").src = imageUrl;
+                document.getElementById("fullscreenImage").style.display = "flex";
+                addToHistory(companyName);
+            } else {
+                alert("Image not available for this company.");
+            }
+        }
+        function closeImage() {
+            document.getElementById("fullscreenImage").style.display = "none";
+        }
+        function filterCompanies() {
+            let filterText = document.getElementById("searchBox").value.toLowerCase();
+            document.querySelectorAll(".company-btn").forEach(button => {
+                let companyName = button.getAttribute("data-name");
+                button.style.display = companyName.includes(filterText) ? "block" : "none";
+            });
+        }
+        function addToHistory(companyName) {
+            let historyList = document.getElementById("historyList");
+            let listItem = document.createElement("li");
+            listItem.innerText = companyName + " - " + new Date().toLocaleString();
+            historyList.appendChild(listItem);
+        }
+
+        document.getElementById("feedbackForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevents the form from reloading the page
+        document.getElementById("feedbackResponse").style.display = "block";
+        setTimeout(() => {
+            document.getElementById("feedbackResponse").style.display = "none";
+        }, 3000);
+        this.reset();
+    });
+    </script>
+</body>
+</html>
