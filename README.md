@@ -1,6 +1,6 @@
 # 📈 Stock Market Analysis & Dashboard
 
-This Python project uses the `yfinance` library to fetch real-time and historical stock data from Yahoo Finance. It performs technical analysis, Monte Carlo simulation for forecasting, and presents insights via interactive dashboards (Plotly/Streamlit). Since a Power BI Pro subscription wasn't available, dashboard screenshots are included instead.
+This Python project uses the `yfinance` library to fetch real-time and historical stock data from Yahoo Finance. It performs technical analysis, Monte Carlo simulation for forecasting, and presents insights via interactive dashboards (PowerBI). Since a Power BI Pro subscription wasn't available, dashboard screenshots are included instead.
 
 ---
 
